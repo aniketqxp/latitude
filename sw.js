@@ -1,7 +1,12 @@
 // Latitude service worker: precached shell, network-first for app files, cached fonts.
-const VERSION = 'lat-v1';
+const VERSION = 'lat-v2';
 const SHELL = [
-  './', 'index.html', 'manifest.webmanifest', 'css/app.css',
+  // the world
+  './', 'index.html', 'manifest.webmanifest', 'css/world.css', 'js/world.js', 'js/doors.js',
+  'js/encounters/index.js', 'js/encounters/dancefloor.js', 'js/encounters/ship.js', 'js/encounters/permits.js',
+  'css/encounters/dancefloor.css', 'css/encounters/ship.css', 'css/encounters/permits.css',
+  // the reading room (the first Latitude, kept as an archive)
+  'archive/index.html', 'css/app.css',
   'js/app.js', 'js/art.js', 'js/render.js', 'js/store.js', 'js/viz.js',
   'js/content/index.js', 'js/content/regions.js', 'js/content/latitude.js', 'js/content/self.js',
   'js/content/inner.js', 'js/content/between.js', 'js/content/voice.js', 'js/content/mind.js',
@@ -41,5 +46,5 @@ self.addEventListener('fetch', e => {
     if (res.ok) { const copy = res.clone(); caches.open(VERSION).then(c => c.put(req, copy)); }
     return res;
   }).catch(async () => (await caches.match(req, { ignoreSearch: true }))
-    || (req.mode === 'navigate' ? caches.match('index.html') : Response.error())));
+    || (req.mode === 'navigate' ? caches.match(/\/archive\//.test(url.pathname) ? 'archive/index.html' : 'index.html') : Response.error())));
 });

@@ -118,7 +118,7 @@ document.addEventListener('click', e => { const a = e.target.closest('a[href^="#
 addEventListener('hashchange', route);
 
 /* ---------- Views ---------- */
-function setTitle(t) { document.title = t ? `${t} — Latitude` : 'Latitude — an atlas of human possibility'; }
+function setTitle(t) { document.title = t ? `${t} — Latitude` : 'The Reading Room — Latitude'; }
 const arrow = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>';
 
 function doorHTML(c) {
@@ -391,5 +391,5 @@ function observeReveals() {
 /* ---------- Boot ---------- */
 route();
 if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-  addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(e => console.warn('SW registration failed', e)));
+  addEventListener('load', () => navigator.serviceWorker.register(new URL('../sw.js', import.meta.url)).catch(e => console.warn('SW registration failed', e)));
 }

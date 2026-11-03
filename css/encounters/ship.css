@@ -1,0 +1,145 @@
+/* The Ship of You: a harbour at first light (or by lamplight, in the dark theme). */
+body[data-world="ship"] {
+  --bg: light-dark(#E6E3D8, #0D1A22); --fg: light-dark(#14232C, #E7EEF0); --soft: light-dark(#5A6C74, #8FA6AF);
+  --hair: light-dark(rgba(20, 35, 44, .16), rgba(231, 238, 240, .14)); --hi: light-dark(#B8452A, #F08A5D);
+  --sea: light-dark(#9DB8C0, #183844); --sea2: light-dark(#7FA0AA, #1F4A58);
+  --plank-new: #DDBB86; --plank-old: #6F604E; --wood: light-dark(#3B3127, #C9B59A);
+}
+.sh { max-width: 72rem; margin: 0 auto; padding: 0 var(--gutter) 3rem; }
+.sh .cap { font: 500 .72rem var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--soft); }
+.sh-title { min-height: calc(70svh - var(--bar-h)); display: flex; flex-direction: column; justify-content: center; }
+.sh-title h1 {
+  margin: .2em 0 .3em; font: 300 clamp(3.2rem, 15vw, 8rem)/.9 var(--f-display);
+  font-variation-settings: 'SOFT' 100, 'WONK' 1, 'opsz' 144; letter-spacing: -.03em;
+}
+.sh-title h1 i { font-weight: 300; color: var(--hi); }
+.sh-hint { margin: 0; color: var(--soft); font: 400 1.05rem/1.4 var(--f-display); font-style: italic; }
+
+/* scrollytelling: the stage sticks while the steps pass over/beside it */
+.sh-scrolly { position: relative; }
+.sh-stage { position: sticky; top: var(--bar-h); margin: 0; z-index: 0; padding-top: .5rem; }
+.sh-stage svg { display: block; width: 100%; max-height: 46svh; overflow: hidden; }
+.sh-tally { margin-top: .4rem; font: 500 .72rem var(--f-mono); letter-spacing: .08em; color: var(--soft); text-align: center; min-height: 1.2em; }
+.sh-steps { position: relative; z-index: 1; }
+.sh-step { min-height: 85svh; display: flex; align-items: flex-end; padding-bottom: 12svh; }
+.sh-step.scrub { min-height: 160svh; }
+.sh-step > p, .sh-step.ask {
+  margin: 0; max-width: 34rem; font: 400 clamp(1.3rem, 5vw, 1.85rem)/1.25 var(--f-display);
+  font-variation-settings: 'SOFT' 80, 'opsz' 72; text-wrap: pretty;
+  background: color-mix(in oklab, var(--bg) 86%, transparent); backdrop-filter: blur(6px);
+  padding: 1rem 1.1rem; border-radius: 14px; box-shadow: 0 0 0 1px var(--hair);
+}
+.sh-step.scrub > p { position: sticky; bottom: 6svh; }
+.sh-step em { color: var(--hi); }
+.sh-step.ask { display: block; align-self: flex-end; }
+.sh-step.ask > p { margin: 0 0 1rem; }
+.sh-choices { display: grid; gap: .5rem; }
+.sh-choices button {
+  text-align: left; border: 0; border-radius: 10px; padding: .75rem 1rem; min-height: 46px;
+  background: transparent; color: var(--fg); box-shadow: inset 0 0 0 1px var(--hair);
+  font: 400 1.05rem/1.3 var(--f-display); transition: background-color .2s, transform .2s var(--spring);
+}
+.sh-choices button:hover { background: color-mix(in oklab, var(--hi) 10%, transparent); }
+.sh-choices button[aria-pressed="true"] { background: var(--hi); color: var(--bg); }
+.sh-choices button:active { transform: scale(.97); }
+.sh-answer { margin: 1rem 0 0 !important; font-size: 1.05rem !important; line-height: 1.45; }
+.sh-answer .quiet { display: block; margin-top: .5rem; color: var(--soft); font-style: italic; }
+.sh-answer.in { animation: sh-in .6s var(--ease); }
+@keyframes sh-in { from { opacity: 0; transform: translateY(.5rem); filter: blur(3px); } }
+
+@media (min-width: 900px) {
+  .sh-scrolly { display: grid; grid-template-columns: 1.3fr 1fr; gap: 3rem; }
+  .sh-stage { height: calc(100svh - var(--bar-h)); display: flex; flex-direction: column; justify-content: center; }
+  .sh-stage svg { max-height: 70svh; }
+  .sh-step { align-items: center; padding-bottom: 0; }
+  .sh-step.scrub > p { position: sticky; top: 40svh; bottom: auto; }
+  .sh-step.scrub { align-items: flex-start; padding-top: 30svh; }
+  .sh-step > p, .sh-step.ask { background: none; backdrop-filter: none; box-shadow: none; padding: 0; }
+}
+
+/* the harbour */
+.sea.back { fill: var(--sea2); }
+.sea.front { fill: var(--sea); opacity: .92; }
+.sea { animation: swell 6s ease-in-out infinite alternate; }
+.sea.front { animation-duration: 4.5s; animation-direction: alternate-reverse; }
+@keyframes swell { to { transform: translateX(-40px); } }
+.ship-a, .ship-b { transition: transform 1.2s var(--ease), opacity .8s; }
+.ship-a { transform: translate(200px, 190px); }
+.ship-b { transform: translate(296px, 190px) scale(.66); opacity: 0; }
+.split .ship-a { transform: translate(104px, 190px) scale(.66); }
+.split .ship-b { opacity: 1; }
+.ship { animation: bob 5s ease-in-out infinite; }
+.ship-b .ship { animation-delay: -2s; }
+@keyframes bob { 50% { transform: translateY(3px) rotate(.8deg); } }
+.pl { fill: var(--plank-new); stroke: rgba(0, 0, 0, .28); stroke-width: .7; transition: fill .5s; }
+.pl.old { fill: var(--plank-old); }
+.ship-b .pl { opacity: 0; transition: opacity .4s; }
+.ship-b .pl.in { opacity: 1; }
+.hull-line { fill: none; stroke: var(--wood); stroke-width: 1.6; }
+.ship-b .hull-line { stroke-dasharray: 4 4; opacity: .6; }
+.rigged .ship-b .hull-line { stroke-dasharray: none; opacity: 1; }
+.mast { stroke: var(--wood); stroke-width: 2.4; fill: none; }
+.sail { fill: light-dark(#F7F3E8, #D9D2C2); stroke: var(--wood); stroke-width: 1; }
+.flag { fill: var(--hi); }
+.eye { fill: var(--wood); }
+.ship-b .mast, .ship-b .sail, .ship-b .flag { opacity: 0; transition: opacity .8s .3s; }
+.rigged .ship-b .mast, .rigged .ship-b .sail, .rigged .ship-b .flag { opacity: 1; }
+.ribs { stroke: var(--wood); stroke-width: 1.4; fill: none; opacity: .55; }
+.dock rect { fill: var(--wood); }
+.dock path { stroke: var(--wood); stroke-width: 3; }
+.pile rect { fill: var(--plank-old); stroke: rgba(0, 0, 0, .3); stroke-width: .5; }
+
+/* you, also a ship */
+.sh-you { padding-top: 14svh; }
+.sh-you h2, .sh-end .big {
+  margin: 0 0 1rem; font: 300 clamp(2.4rem, 11vw, 5.5rem)/.95 var(--f-display);
+  font-variation-settings: 'SOFT' 100, 'WONK' 1, 'opsz' 144; letter-spacing: -.025em;
+}
+.sh-lede { max-width: 34rem; font: 400 clamp(1.15rem, 4.4vw, 1.45rem)/1.35 var(--f-display); margin: 0 0 2rem; text-wrap: pretty; }
+.sh-age { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: .3rem 1rem; max-width: 30rem; }
+.sh-age span { font: 500 .72rem var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--soft); }
+.sh-age output { font: 300 3rem/1 var(--f-display); font-variant-numeric: tabular-nums; }
+.sh-age input { grid-column: 1 / -1; width: 100%; accent-color: var(--hi); height: 2rem; }
+.sh-you .cap b { font-weight: 500; }
+.sh-you .cap .young { color: #E39A1E; }
+.sh-you .cap .old { color: #7C5CC4; }
+
+.sh-body { display: grid; grid-template-columns: minmax(7rem, 38%) 1fr; gap: 1rem; align-items: center; margin-top: 1.5rem; }
+.body { width: 100%; height: auto; max-height: 56svh; overflow: visible; }
+.body [data-p] { cursor: pointer; transition: opacity .3s; }
+.p-sil { fill: color-mix(in oklab, var(--c-fat) 30%, var(--bg)); stroke: var(--c-skin); stroke-width: 3.5; }
+.p-line { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.p-line.thin { stroke-width: 1.6; }
+[data-p="bone"] { stroke: var(--c-bone); }
+[data-p="blood"] { stroke: var(--c-blood); }
+[data-p="gut"] { stroke: var(--c-gut); }
+[data-p="heart"] { fill: var(--c-heart); }
+[data-p="brain"] { fill: var(--c-brain); }
+[data-p="lens"] { fill: var(--c-lens); stroke: var(--bg); stroke-width: 1; }
+.p-gyri { fill: none; stroke: var(--bg); stroke-width: 1.2; opacity: .6; pointer-events: none; }
+.body * { transition: fill .35s, stroke .35s, opacity .3s; }
+.sh-body:not([data-focus=""]) .body [data-p] { opacity: .22; }
+.sh-body[data-focus="fat"] [data-p="fat"], .sh-body[data-focus="skin"] [data-p="fat"],
+.sh-body[data-focus="bone"] [data-p="bone"], .sh-body[data-focus="blood"] [data-p="blood"],
+.sh-body[data-focus="gut"] [data-p="gut"], .sh-body[data-focus="heart"] [data-p="heart"],
+.sh-body[data-focus="brain"] [data-p="brain"], .sh-body[data-focus="lens"] [data-p="lens"] { opacity: 1 !important; }
+
+.sh-parts { list-style: none; margin: 0; padding: 0; display: grid; gap: .15rem; }
+.sh-parts button {
+  width: 100%; display: grid; grid-template-columns: .8rem 1fr; gap: 0 .6rem; align-items: center;
+  border: 0; background: transparent; color: var(--fg); text-align: left; padding: .4rem .5rem; border-radius: 8px; min-height: 44px;
+}
+.sh-parts button:hover, .sh-parts button[aria-pressed="true"] { background: color-mix(in oklab, var(--fg) 7%, transparent); }
+.sh-parts .sw { grid-row: span 2; width: .8rem; height: .8rem; border-radius: 50%; background: var(--c); }
+.sh-parts .nm { font: 400 .98rem/1.2 var(--f-display); }
+.sh-parts .ag { font: 400 .74rem var(--f-mono); color: var(--soft); font-variant-numeric: tabular-nums; }
+.sh-note { min-height: 4.5em; max-width: 34rem; margin: 1.2rem 0 0; font: 400 1.15rem/1.4 var(--f-display); font-style: italic; text-wrap: pretty; }
+@media (min-width: 900px) { .sh-body { grid-template-columns: 16rem 22rem; } }
+
+.sh-end { padding: 16svh 0 4svh; max-width: 36rem; }
+.sh-end p { font: 400 clamp(1.2rem, 4.6vw, 1.55rem)/1.4 var(--f-display); text-wrap: pretty; margin: 0 0 1.4em; }
+.sh-end .big { margin: 1.4em 0; color: var(--hi); }
+
+@media (prefers-reduced-motion: reduce) {
+  .sea, .ship { animation: none; }
+}
