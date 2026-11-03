@@ -1,0 +1,101 @@
+/* It Is Worthy of Notice: plate glass, a north window, lamp amber. Plates stay pale in both
+   modes, because glass on a light box is pale whatever the hour. */
+body[data-world="leavitt"] {
+  --bg: light-dark(#E4E6E3, #13171B); --fg: light-dark(#1C2329, #E6E8E4); --soft: light-dark(#5F6A70, #93A0A6);
+  --hair: light-dark(rgba(28, 35, 41, .16), rgba(230, 232, 228, .14)); --hi: light-dark(#B86A12, #F2B35A);
+  --night: #0B1016; --night-ink: #E8E4D8;
+  --lv-wall: light-dark(#D3D7D4, #1C2228); --lv-wood: light-dark(#6B4E35, #3D2E22); --lv-ink: light-dark(#2A3036, #C9CDCA);
+  --lv-glass: #EEF0EA; --lv-speck: #1E2226;
+}
+.book[data-story="leavitt"] svg text { font-family: var(--f-mono); }
+.lv-wall { fill: var(--lv-wall); }
+.lv-light { fill: color-mix(in oklab, #FFF8E8 80%, var(--lv-wall)); }
+.lv-mullion { stroke: var(--lv-wood); stroke-width: 6; fill: none; }
+.lv-sill, .lv-desk, .lv-frame, .lv-crate { fill: var(--lv-wood); }
+.lv-floor { fill: color-mix(in oklab, var(--lv-wood) 55%, var(--lv-wall)); }
+.lv-leg, .lv-chair path { stroke: var(--lv-wood); stroke-width: 7; fill: none; stroke-linecap: round; }
+.lv-figure { fill: var(--lv-ink); }
+.lv-loupe { stroke: var(--lv-ink); stroke-width: 4; stroke-linecap: round; }
+.lv-loupe-rim { fill: color-mix(in oklab, var(--lv-glass) 60%, transparent); stroke: #A88A3A; stroke-width: 3; }
+.lv-glass { fill: var(--lv-glass); }
+.lv-glass.lit { fill: #FBFAF4; }
+.lv-shadow { fill: rgba(0, 0, 0, .18); }
+.lv-edge { fill: none; stroke: rgba(30, 34, 38, .12); stroke-width: 1; }
+.lv-stars, .lv-star-v { fill: var(--lv-speck); }
+.lv-plates rect { fill: color-mix(in oklab, var(--lv-glass) 80%, #7E9AA0); stroke: rgba(0, 0, 0, .2); }
+.lv-slat { stroke: rgba(0, 0, 0, .28); stroke-width: 3; fill: none; }
+.lv-label, .lv-paper { fill: #F3EEDF; }
+.lv-andes { fill: color-mix(in oklab, var(--hi) 35%, #F3EEDF); }
+.lv-type { font-size: 10px; letter-spacing: .14em; fill: #2B2B28; }
+.lv-type.sm { font-size: 7.5px; letter-spacing: .12em; }
+.lv-type.inv { fill: #F3EEDF; }
+.lv-type.faint { fill: rgba(232, 228, 216, .55); }
+.lv-rule { stroke: rgba(80, 110, 140, .35); stroke-width: 1; fill: none; }
+.lv-hand { font: italic 11px var(--f-display); fill: #2B3A55; }
+.lv-hand.hi, .lv-pen.hi { fill: #B8452A; }
+.lv-head { font-size: 8px; letter-spacing: .1em; fill: #6A6A60; }
+
+/* The blink comparator */
+.lv-blink { cursor: pointer; outline: none; }
+.lv-blink:focus-visible .lv-glass { stroke: var(--hi); stroke-width: 4; }
+.lv-var { fill: var(--lv-speck); }
+.lv-var.b, .lv-blink.night-b .lv-var.a { opacity: 0; }
+.lv-blink.night-b .lv-var.b { opacity: 1; }
+.lv-hit { fill: transparent; }
+.lv-night { font-size: 13px; letter-spacing: .2em; fill: #6A6A60; }
+.lv-night .b, .lv-blink.night-b .lv-night .a { display: none; }
+.lv-blink.night-b .lv-night .b { display: inline; }
+.lv-ring { fill: none; stroke: var(--hi); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.lv-blink.found .lv-ring { stroke-dashoffset: 0; transition: stroke-dashoffset .9s var(--ease); }
+.pg-cover .lv-ring { stroke-dashoffset: 0; }
+
+/* The graph */
+.lv-axis { stroke: #2B2B28; stroke-width: 1.5; fill: none; }
+.lv-dots circle { fill: #2B2B28; }
+.lv-dots circle.o { fill: none; stroke: #2B2B28; stroke-width: 1.2; }
+.lv-line { stroke: var(--hi); stroke-width: 2.5; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.lv-graphpage.done .lv-line, .lv-graphpage[data-beat="1"] .lv-line { stroke-dashoffset: 0; transition: stroke-dashoffset 1.4s var(--ease); }
+.lv-graphpage .lv-line.l2 { transition-delay: .25s; }
+.lv-graphpage .pg-art { background: #F3EEDF; }
+
+/* Night pages */
+.lv-night-sky { fill: #0B1016; }
+.lv-faint { fill: rgba(232, 228, 216, .5); }
+.lv-sea { fill: #121C26; }
+.lv-glow { fill: rgba(242, 179, 90, .22); filter: blur(6px); }
+.lv-glow.wide { fill: rgba(242, 179, 90, .1); filter: blur(14px); }
+.lv-lamp { fill: #FFE2A8; }
+.lv-shimmer { stroke: rgba(255, 226, 168, .35); stroke-width: 2; stroke-linecap: round; }
+.lv-maybe { opacity: 0; transition: opacity .8s var(--ease); fill: none; stroke: rgba(232, 228, 216, .5); stroke-width: 1.5; }
+.lv-maybe text { stroke: none; fill: rgba(232, 228, 216, .6); }
+.pg[data-beat="1"] .lv-maybe, .pg[data-beat="2"] .lv-maybe { opacity: 1; }
+.lv-tape { fill: rgba(242, 179, 90, .12); }
+.lv-ticks { stroke: rgba(242, 179, 90, .55); stroke-width: 1.5; }
+.lv-pulse { transform-origin: 200px 150px; animation: lv-pulse 2.6s ease-in-out infinite; }
+@keyframes lv-pulse { 0%, 100% { opacity: .55; transform: scale(.85); } 30% { opacity: 1; transform: scale(1.08); } }
+.lv-galaxy { fill: rgba(240, 230, 210, .82); }
+.lv-core { fill: #FFF3D6; filter: blur(3px); }
+.lv-moon { fill: #1A222A; }
+.lv-moon-lit { fill: #D9D4C6; }
+.lv-crater { fill: none; stroke: rgba(232, 228, 216, .45); stroke-width: 1.5; }
+
+/* Hubble's plate */
+.lv-smudge { fill: rgba(30, 34, 38, .16); filter: blur(5px); }
+.lv-smudge.core { fill: rgba(30, 34, 38, .5); filter: blur(3px); }
+.lv-pencil { stroke: #4A4A48; stroke-width: 1.5; }
+.lv-pen { font: 600 20px var(--f-display); fill: #2E2E2C; }
+.lv-pen.hi { font-size: 26px; font-style: italic; }
+.lv-strike { stroke: #B8452A; stroke-width: 2.5; stroke-linecap: round; }
+
+/* Envelope */
+.lv-paper.env { fill: #EFE8D6; }
+.lv-stamp { fill: #3E5C7A; }
+.lv-post { fill: none; stroke: rgba(40, 40, 40, .45); stroke-width: 1.5; }
+
+/* The sentence, typeset like the Annals */
+.lv-typeset .beat { font-family: Georgia, 'Times New Roman', var(--f-display); font-variation-settings: normal; letter-spacing: 0; line-height: 1.3; }
+.lv-typeset .pg-words { max-width: 30rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .lv-pulse { animation: none; opacity: 1; }
+}

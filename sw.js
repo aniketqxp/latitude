@@ -1,10 +1,13 @@
 // Latitude service worker: precached shell, network-first for app files, cached fonts.
-const VERSION = 'lat-v2';
+const VERSION = 'lat-v3';
 const SHELL = [
   // the world
   './', 'index.html', 'manifest.webmanifest', 'css/world.css', 'js/world.js', 'js/doors.js',
   'js/encounters/index.js', 'js/encounters/dancefloor.js', 'js/encounters/ship.js', 'js/encounters/permits.js',
   'css/encounters/dancefloor.css', 'css/encounters/ship.css', 'css/encounters/permits.css',
+  'js/book.js', 'css/book.css',
+  'js/encounters/leavitt.js', 'js/encounters/norton.js', 'js/encounters/haber.js', 'js/encounters/tuesday.js', 'js/encounters/sameface.js',
+  'css/encounters/leavitt.css', 'css/encounters/norton.css', 'css/encounters/haber.css', 'css/encounters/tuesday.css', 'css/encounters/sameface.css',
   // the reading room (the first Latitude, kept as an archive)
   'archive/index.html', 'css/app.css',
   'js/app.js', 'js/art.js', 'js/render.js', 'js/store.js', 'js/viz.js',

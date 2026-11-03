@@ -1,6 +1,6 @@
 // Latitude: a corridor of doors. The shell owns only the corridor, the threshold, the exit
 // and the curtain; each encounter owns everything inside its own room.
-import { ENCOUNTERS, byId } from './encounters/index.js';
+import { ENCOUNTERS, COLLECTIONS, byId, inCollection } from './encounters/index.js';
 import { DOORS } from './doors.js';
 
 // Links from the first edition (#/c/…, #/map, …) now live in the reading room.
@@ -67,21 +67,24 @@ function route() {
   const go = () => {
     if (cleanup) { try { cleanup(); } catch (e) { console.error(e); } cleanup = null; }
     const m = location.hash.match(/^#\/e\/([a-z-]+)$/);
-    return m && byId[m[1]] ? encounter(byId[m[1]]) : corridor();
+    if (m && byId[m[1]]) return encounter(byId[m[1]]);
+    return location.hash === '#/index' ? index() : corridor();
   };
   document.startViewTransition && !reduced() && main.childElementCount ? document.startViewTransition(go) : go();
 }
 addEventListener('hashchange', route);
 
 /* ---------- Corridor ---------- */
-// Door order is shuffled once per visit: the corridor shouldn't be learnable.
-function doorOrder() {
-  let o = session.get('lat:order');
-  const ids = ENCOUNTERS.map(e => e.id);
+// A collection's doors, in order. Shuffled wings are shuffled once per visit (the rooms
+// shouldn't be learnable); authored wings keep the order the registry gives them.
+function doorOrder(c) {
+  const ids = inCollection(c.id).map(e => e.id);
+  if (c.order !== 'shuffle') return ids;
+  let o = session.get('lat:order:' + c.id);
   if (!Array.isArray(o) || o.length !== ids.length || !ids.every(id => o.includes(id))) {
     o = ids.slice();
     for (let i = o.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [o[i], o[j]] = [o[j], o[i]]; }
-    session.set('lat:order', o);
+    session.set('lat:order:' + c.id, o);
   }
   return o;
 }
@@ -98,15 +101,26 @@ function corridor() {
       <h1 class="def"><span class="n">1</span> Distance from the equator. <span class="n">2</span> <em>Room to move.</em></h1>
       <p class="sub">This is a corridor. Behind each door is a small, strange thing about being a person. None of them is a lesson.</p>
       <button class="walk-on" data-walk="1">Walk ${chev(1)}</button>
+      <a class="to-index" href="#/index">or see every door, listed</a>
     </article>`,
-    ...doorOrder().map(id => {
-      const e = byId[id];
-      return `<article class="slide door-slide" data-door="${e.door}">
-        <a class="door-link" href="#/e/${e.id}" aria-label="Open the door: ${esc(e.line)}">${DOORS[e.door]()}</a>
-        <p class="inscription">${esc(e.line)}</p>
-        <p class="medium">${esc(e.medium)}${seen.includes(e.id) ? ' · <span class="been">you’ve been in</span>' : ''}</p>
-      </article>`;
-    }),
+    ...COLLECTIONS.flatMap(c => [
+      // A placard at the head of each wing.
+      `<article class="slide placard" data-collection="${c.id}">
+        <div class="plaque">
+          <p class="plaque-n" aria-hidden="true">${c.numeral}</p>
+          <h2 class="plaque-t">${esc(c.title)}</h2>
+          <p class="plaque-note">${esc(c.note)}</p>
+        </div>
+      </article>`,
+      ...doorOrder(c).map(id => {
+        const e = byId[id];
+        return `<article class="slide door-slide" data-door="${e.door}">
+          <a class="door-link" href="#/e/${e.id}" aria-label="Open the door: ${esc(e.title)}. ${esc(e.line)}">${DOORS[e.door]()}</a>
+          <p class="inscription">${esc(e.line)}</p>
+          <p class="medium">${esc(e.medium)}${seen.includes(e.id) ? ' · <span class="been">you’ve been in</span>' : ''}</p>
+        </article>`;
+      })
+    ]),
     `<article class="slide door-slide" data-door="building">
       <button class="door-link" id="unbuilt" aria-label="A door still being built">${DOORS.building()}</button>
       <p class="inscription" id="unbuiltLine">This one isn’t finished.</p>
@@ -174,6 +188,30 @@ function corridor() {
   cleanup = () => removeEventListener('resize', depth);
 }
 
+/* ---------- The index: every door as a line of type ---------- */
+// The corridor is for wandering; past a few dozen doors, nobody wanders. The index is how
+// a large collection stays findable without becoming a menu.
+function index() {
+  document.body.dataset.world = 'corridor';
+  document.title = 'Index of first lines — Latitude';
+  curtainBtn.hidden = true; curtainData = null;
+  const seen = session.get('lat:seen') || [];
+  main.innerHTML = `<section class="index">
+    <p class="cap">Index of first lines</p>
+    <h1 class="index-t">Every door</h1>
+    ${COLLECTIONS.map(c => `<section class="ix-wing" aria-labelledby="ix-${c.id}">
+      <h2 id="ix-${c.id}"><span class="ix-n">${c.numeral}</span> ${esc(c.title)}</h2>
+      <p class="ix-note">${esc(c.note)}</p>
+      <ol>${inCollection(c.id).map(e => `<li><a href="#/e/${e.id}">
+        <span class="ix-line">${esc(e.line)}</span>
+        <span class="ix-meta">${esc(e.title)} · ${esc(e.medium)}${seen.includes(e.id) ? ' · <span class="been">you’ve been in</span>' : ''}</span></a></li>`).join('')}</ol>
+    </section>`).join('')}
+    <a class="exit-back" href="#/">Back to the corridor</a>
+  </section>`;
+  window.scrollTo(0, 0);
+  main.focus({ preventScroll: true });
+}
+
 /* ---------- An encounter ---------- */
 const loadedCSS = new Map();
 function css(id) {
@@ -189,8 +227,11 @@ async function encounter(e) {
   document.body.dataset.world = e.id;
   document.title = `${e.title} — Latitude`;
   curtainBtn.hidden = true;
+  // Authored wings read like a book: the exit offers the next one. Elsewhere, any other door.
+  const wing = inCollection(e.collection);
   const others = ENCOUNTERS.filter(x => x.id !== e.id);
-  const next = others[Math.floor(Math.random() * others.length)];
+  const authored = COLLECTIONS.find(c => c.id === e.collection)?.order === 'authored';
+  const next = (authored && wing[wing.indexOf(e) + 1]) || others[Math.floor(Math.random() * others.length)];
   main.innerHTML = `<div class="room" id="stage" aria-busy="true"><p class="arriving">…</p></div>
     <nav class="exit" aria-label="Leave">
       <a class="exit-next" href="#/e/${next.id}"><span class="cap">Another door</span><span class="exit-line">${esc(next.line)}</span></a>

@@ -122,6 +122,34 @@ main:focus { outline: none; }
 .walk-on:active { transform: scale(.95); }
 .walk-on svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; }
 
+.to-index { margin-top: 1rem; font: .8rem var(--f-mono); letter-spacing: .06em; color: var(--soft); text-underline-offset: .25em; }
+
+/* Placards: a brass-edged plaque at the head of each wing. */
+.slide.placard { grid-template-rows: 1fr var(--floor); }
+.plaque { align-self: center; margin-bottom: 8svh; }
+.plaque {
+  width: min(20rem, 100%); padding: 1.6rem 1.4rem 1.5rem; text-align: center;
+  border: 1.5px solid var(--brass); outline: 1px solid color-mix(in oklab, var(--brass) 45%, transparent); outline-offset: 5px;
+  border-radius: 3px; opacity: calc(1 - var(--ad) * 1.4); transform: scale(calc(1 - var(--ad) * .1));
+}
+.plaque-n { margin: 0; font: 400 3.4rem/1 var(--f-display); font-variation-settings: 'SOFT' 0, 'WONK' 0, 'opsz' 144; color: var(--brass); }
+.plaque-t { margin: .5rem 0 0; font: 400 clamp(1.7rem, 6.4vw, 2.4rem)/1.05 var(--f-display); font-style: italic; font-variation-settings: 'SOFT' 100, 'WONK' 1, 'opsz' 144; text-wrap: balance; }
+.plaque-note { margin: .8rem auto 0; max-width: 22ch; color: var(--soft); font-size: 1rem; text-wrap: balance; }
+
+/* The index of first lines. */
+.index { max-width: 40rem; margin: 0 auto; padding: clamp(2rem, 8svh, 4rem) var(--gutter) calc(4rem + env(safe-area-inset-bottom)); }
+.index-t { margin: .4rem 0 1.5rem; font: 400 clamp(2.4rem, 10vw, 3.6rem)/1 var(--f-display); font-style: italic; font-variation-settings: 'SOFT' 100, 'WONK' 1, 'opsz' 144; }
+.ix-wing { padding-top: 1.6rem; border-top: 1px solid var(--hair); margin-bottom: 1.8rem; }
+.ix-wing h2 { margin: 0; font: 500 .78rem var(--f-mono); letter-spacing: .14em; text-transform: uppercase; }
+.ix-n { color: var(--brass); margin-right: .4rem; }
+.ix-note { margin: .3rem 0 .6rem; color: var(--soft); font-size: 1rem; }
+.ix-wing ol { list-style: none; margin: 0; padding: 0; }
+.ix-wing a { display: grid; gap: .2rem; padding: .75rem 0; text-decoration: none; }
+.ix-line { font: 400 clamp(1.35rem, 5vw, 1.7rem)/1.15 var(--f-display); font-style: italic; font-variation-settings: 'SOFT' 100, 'WONK' 1, 'opsz' 144; }
+.ix-wing a:hover .ix-line { text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: .18em; }
+.ix-meta { font: .74rem/1.4 var(--f-mono); letter-spacing: .04em; color: var(--soft); }
+.ix-meta .been { color: var(--hi); }
+
 .walk {
   position: absolute; z-index: 2; top: 45%; width: 48px; height: 48px; border-radius: 50%;
   border: 1px solid var(--hair); background: color-mix(in oklab, var(--bg) 70%, transparent);
@@ -170,6 +198,47 @@ main:focus { outline: none; }
 .d-ticket { fill: #FFF8E8; stroke: rgba(0, 0, 0, .25); stroke-width: .6; transform-box: fill-box; transform-origin: 50% 0; }
 .door-link:hover .d-ticket { animation: ticket .9s var(--spring); }
 @keyframes ticket { 40% { transform: scaleY(1.35); } }
+
+[data-door="dome"] { --panel: light-dark(#4A5568, #2E3644); }
+.d-wall { fill: color-mix(in oklab, var(--fg) 9%, var(--bg)); }
+.d-mould.dk { stroke: color-mix(in oklab, var(--fg) 22%, transparent); }
+.d-night { fill: #12182A; }
+.d-star { fill: #E8ECF6; }
+.d-star.pulse { fill: #F2B35A; transform-box: fill-box; transform-origin: center; animation: cepheid 3.6s ease-in-out infinite; }
+@keyframes cepheid { 0%, 100% { transform: scale(.55); opacity: .55; } 22% { transform: scale(1.25); opacity: 1; } }
+
+[data-door="crown"] { --panel: light-dark(#8E2A2C, #6A1E21); }
+.d-crown { fill: #C59A3C; stroke: #8E6E22; stroke-width: 1.2; stroke-linejoin: round; }
+.d-gilt { fill: none; stroke: #C59A3C; stroke-width: 1.6; }
+.d-pillar { fill: none; stroke: currentColor; stroke-width: 5; opacity: .35; }
+.d-fog ellipse { fill: color-mix(in oklab, var(--bg) 70%, #9AA39A); opacity: .85; filter: blur(5px); }
+.d-fog { animation: fog 11s ease-in-out infinite alternate; }
+@keyframes fog { to { transform: translateX(-16px); } }
+
+[data-door="lab"] { --panel: light-dark(#6E6A5E, #4A473F); }
+.d-pipe { fill: none; stroke: color-mix(in oklab, var(--fg) 45%, transparent); stroke-width: 6; stroke-linecap: round; }
+.d-valve { fill: #A87612; }
+.d-etch path { fill: none; stroke: #A87612; stroke-width: 2; stroke-linecap: round; }
+.d-stencil.lab { fill: var(--soft); font-size: 6.5px; letter-spacing: .3em; }
+.door-link:hover .d-etch, .door-link:focus-visible .d-etch { animation: etch 1.4s var(--ease); }
+@keyframes etch { 50% { opacity: .3; } }
+
+[data-door="front"] { --panel: light-dark(#2F4F70, #24405C); }
+.d-fan { fill: #F4D9A0; opacity: .85; }
+.d-num { font: 600 20px var(--f-display); fill: var(--brass); }
+.d-letterbox { fill: var(--brass); }
+.d-note { fill: #3E5A4C; }
+.d-note-l { stroke: #EFE8D6; stroke-width: 1; }
+.d-step { fill: color-mix(in oklab, var(--fg) 14%, var(--bg)); }
+.door-link:hover .d-note, .door-link:hover .d-note-l { transform: translateY(-3px); transition: transform .4s var(--spring); }
+
+[data-door="cinema"] { --panel: light-dark(#2A2926, #1E1D1B); }
+.d-marquee { fill: #161513; }
+.d-marquee-t { font: 600 10px var(--f-mono); letter-spacing: .16em; fill: #ECE8DE; }
+.d-marquee-t.sm { font-size: 5.4px; letter-spacing: .12em; fill: #9A958B; }
+.d-bulb { fill: #F4E6B8; animation: chase 1.2s steps(1) infinite; animation-delay: calc(var(--i) * -.4s); }
+@keyframes chase { 0% { opacity: 1; } 33% { opacity: .25; } }
+[data-door="cinema"] .d-glass { fill: #B8B4AA; }
 
 [data-door="building"] .door-link { color: var(--soft); }
 .d-plan { fill: none; stroke: currentColor; stroke-width: 2; stroke-dasharray: 7 6; }

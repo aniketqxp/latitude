@@ -1,0 +1,64 @@
+/* His Imperial Majesty: fog over the city, imperial red, epaulette gold. */
+body[data-world="norton"] {
+  --bg: light-dark(#DCE0DA, #121716); --fg: light-dark(#1E2624, #E4E8E2); --soft: light-dark(#5E6A66, #94A29D);
+  --hair: light-dark(rgba(30, 38, 36, .16), rgba(228, 232, 226, .14)); --hi: light-dark(#A3262A, #E0565A);
+  --night: #101615; --night-ink: #E4E8E2;
+  --nt-sky: light-dark(#C9D0CA, #1B2322); --nt-ink: light-dark(#26302D, #0A0E0D); --nt-gold: #C59A3C;
+  --nt-paper: light-dark(#EEE8D8, #E3DCC9);
+}
+.book[data-story="norton"] svg text { font-family: var(--f-mono); }
+.nt-sky { fill: var(--nt-sky); }
+.nt-sky.night, .tone-dark .nt-sky { fill: #18201F; }
+.nt-fog { fill: light-dark(rgba(240, 242, 236, .55), rgba(150, 165, 160, .14)); filter: blur(8px); }
+.tone-dark .nt-fog { fill: rgba(150, 165, 160, .16); }
+.nt-street { fill: color-mix(in oklab, var(--nt-ink) 85%, var(--nt-sky)); }
+.nt-emperor, .nt-cop, .nt-editor, .nt-crowd { fill: var(--nt-ink); }
+.tone-dark .nt-emperor { fill: #050707; }
+.nt-ep, .nt-gold { fill: var(--nt-gold); }
+.nt-plume { fill: var(--hi); }
+.nt-sabre { stroke: #9BA3A0; stroke-width: 4; stroke-linecap: round; fill: none; }
+.nt-stick { stroke: #6B4A2E; stroke-width: 5; stroke-linecap: round; fill: none; }
+.nt-arm { stroke: var(--nt-ink); stroke-width: 9; stroke-linecap: round; fill: none; }
+.nt-lamp path { stroke: var(--nt-ink); stroke-width: 6; fill: var(--nt-ink); }
+.nt-flame { fill: #FFD98A; }
+.nt-halo { fill: rgba(255, 217, 138, .28); filter: blur(10px); }
+.nt-water { fill: light-dark(#9EAEAA, #223130); }
+.nt-shipg { fill: var(--nt-ink); }
+.nt-mast { stroke: var(--nt-ink); stroke-width: 5; }
+.nt-sail { fill: light-dark(#EFEBDF, #8B948F); }
+.nt-sacks { fill: #C8B48A; stroke: #8A7550; }
+.nt-type { font-size: 11px; letter-spacing: .14em; fill: #2B2B28; }
+.nt-type.sm { font-size: 8px; letter-spacing: .1em; }
+.nt-type.inv { fill: #EEE8D8; font-size: 10px; }
+.nt-paper, .nt-doc { fill: var(--nt-paper); }
+.nt-doc { stroke: rgba(0, 0, 0, .18); }
+.nt-wall { fill: light-dark(#D3D6CE, #2A3130); }
+.nt-window { fill: var(--nt-sky); stroke: var(--nt-ink); stroke-width: 6; }
+.nt-desk { fill: #4E3A28; }
+.nt-lines { stroke: rgba(40, 40, 40, .35); stroke-width: 2; fill: none; }
+.nt-grid { stroke: rgba(40, 40, 40, .12); fill: none; }
+.nt-price { stroke: var(--hi); stroke-width: 3.5; fill: none; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: .55; transition: stroke-dashoffset 1.2s var(--ease); }
+.nt-chartpage.done .nt-price { stroke-dashoffset: 0; }
+.nt-dot { fill: var(--hi); }
+.nt-stamp { font: 700 18px var(--f-mono); letter-spacing: .08em; fill: none; stroke: var(--hi); stroke-width: 1.2; }
+.nt-dome { fill: #8F9893; }
+.nt-col { stroke: var(--nt-paper); stroke-width: 6; }
+.nt-x { stroke: var(--hi); stroke-width: 9; stroke-linecap: round; fill: none; stroke-dasharray: 1; stroke-dashoffset: 1; animation: nt-draw .7s var(--ease) .25s forwards; }
+@keyframes nt-draw { to { stroke-dashoffset: 0; } }
+.nt-coat { fill: #233A63; }
+.nt-hat { fill: var(--nt-ink); }
+.nt-note { fill: #E6DEC4; }
+.nt-note-b { fill: none; stroke: #2E4D3A; stroke-width: 2; stroke-dasharray: 4 3; }
+.nt-big { font: italic 30px var(--f-display); fill: #2E4D3A; }
+.nt-seal { fill: none; stroke: var(--hi); stroke-width: 2; }
+.nt-shadow { fill: rgba(0, 0, 0, .2); }
+.nt-q { font: 600 28px var(--f-display); fill: var(--hi); }
+.nt-land { fill: var(--nt-ink); }
+.nt-dotted { fill: none; stroke: var(--hi); stroke-width: 2.5; stroke-dasharray: 3 7; stroke-linecap: round; }
+.nt-bridge { fill: var(--hi); }
+.nt-cable { fill: none; stroke: var(--hi); stroke-width: 2; }
+.nt-sign path { stroke: var(--nt-ink); stroke-width: 6; }
+.nt-sign rect { fill: #24443A; }
+.nt-coin { fill: #B9A46A; stroke: #7F6F40; }
+.nt-proclaim .beat { font-style: italic; font-variation-settings: 'SOFT' 100, 'WONK' 1, 'opsz' 96; }
+@media (prefers-reduced-motion: reduce) { .nt-x { animation: none; stroke-dashoffset: 0; } .nt-price { transition: none; } }

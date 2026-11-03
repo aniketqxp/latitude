@@ -1,0 +1,34 @@
+/* Tuesday, with Notes: a ruled diary page, a biro hand, and two editions in the margins.
+   The centenary edition annotates in gilt italic; the revised edition in plain grey type. */
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap');
+body[data-world="tuesday"] {
+  --bg: light-dark(#F1ECE0, #191714); --fg: light-dark(#23201B, #ECE6D8); --soft: light-dark(#6E675A, #A39C8D);
+  --hair: light-dark(rgba(35, 32, 27, .15), rgba(236, 230, 216, .13)); --hi: light-dark(#2F4FA0, #8FA8EA);
+  --night: #191714; --night-ink: #ECE6D8;
+  --tu-rule: light-dark(rgba(60, 100, 170, .2), rgba(143, 168, 234, .16)); --tu-margin: light-dark(rgba(200, 60, 60, .35), rgba(230, 110, 110, .3));
+  --tu-gilt: light-dark(#8C6A1E, #D9B45E); --tu-hand: 'Caveat', 'Segoe Print', 'Bradley Hand', cursive;
+}
+.tu-desk { fill: light-dark(#D9D0BE, #24211C); }
+.tu-shadow { fill: rgba(0, 0, 0, .22); }
+.tu-cover { fill: #3E5A4C; }
+.tu-band { fill: #2A3F35; }
+.tu-label { fill: #EFE8D6; }
+.tu-hand { font: 600 30px var(--tu-hand); fill: #2B3A6A; }
+.tu-hand.sm { font-size: 18px; }
+.tu-pencil { stroke: #C9A040; stroke-width: 8; stroke-linecap: round; }
+
+/* The diary page */
+.pg.tu-diary {
+  background-color: var(--pp);
+  background-image: linear-gradient(90deg, transparent calc(var(--gutter) + 1.6rem), var(--tu-margin) calc(var(--gutter) + 1.6rem), var(--tu-margin) calc(var(--gutter) + 1.7rem), transparent calc(var(--gutter) + 1.7rem)),
+    repeating-linear-gradient(transparent 0 calc(2.2rem - 1px), var(--tu-rule) calc(2.2rem - 1px) 2.2rem);
+}
+.tu-diary .pg-words { align-self: start; padding-top: clamp(2.6rem, 10vh, 5rem); padding-left: calc(var(--gutter) + 2.4rem); }
+.tu-diary .beat:not(.pg-notes) { font: 500 clamp(1.9rem, 8vw, 2.7rem)/1.15 var(--tu-hand); color: var(--hi); letter-spacing: 0; font-variation-settings: normal; }
+.tu-diary .fn { font-size: .5em; color: var(--fg); }
+.tu-diary .pg-notes { margin-top: 1.8rem; border-top-style: dashed; }
+.book[data-lens="c"] .pg-notes { font-style: italic; color: var(--tu-gilt); font-variation-settings: 'SOFT' 100, 'WONK' 1, 'opsz' 72; }
+.book[data-lens="r"] .pg-notes { font: 400 clamp(.86rem, 3.5vw, 1rem)/1.5 var(--f-mono); color: var(--soft); }
+.book[data-lens="r"] .pg-notes i { font-style: normal; text-decoration: underline; }
+.tu-today .beat:not(.pg-notes):last-child { font: 400 clamp(1.1rem, 4.4vw, 1.4rem)/1.4 var(--f-display); color: var(--soft); font-style: italic; margin-top: 2.2rem; }
+.book[data-story="tuesday"] .pg-eyebrow { color: var(--soft); }

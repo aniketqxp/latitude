@@ -1,0 +1,59 @@
+/* Bread from Air: wheat gold on soot, and chlorine green for the war pages. */
+body[data-world="haber"] {
+  --bg: light-dark(#EDE6D4, #15130F); --fg: light-dark(#1E1B15, #EDE6D4); --soft: light-dark(#6B6253, #A39A88);
+  --hair: light-dark(rgba(30, 27, 21, .16), rgba(237, 230, 212, .14)); --hi: light-dark(#A87612, #E2B04A);
+  --night: #0F0E0B; --night-ink: #E8E2D2;
+  --hb-wheat: light-dark(#C69A33, #D9AE4C); --hb-ink: light-dark(#2B2720, #D8D0BE); --hb-gas: #B9C34A;
+}
+.book[data-story="haber"] svg text { font-family: var(--f-mono); }
+.hb-bg { fill: var(--pp); }
+.hb-n2 circle { fill: none; stroke: var(--hb-ink); stroke-width: 2; }
+.hb-n2.o2 circle { stroke-dasharray: 2 3; opacity: .55; }
+.hb-bond { stroke: var(--hb-ink); stroke-width: 1.4; }
+.hb-n2.big circle { stroke-width: .7; fill: color-mix(in oklab, var(--hi) 14%, transparent); }
+.hb-n2.big .hb-bond { stroke-width: .5; }
+.tone-dark .hb-n2 circle, .tone-dark .hb-bond { stroke: var(--night-ink); }
+.hb-air { opacity: .75; }
+.hb-air.drifting { animation: hb-drift 14s ease-in-out infinite alternate; }
+@keyframes hb-drift { to { transform: translate(-12px, -8px); } }
+.hb-wheat { fill: var(--hb-wheat); }
+.hb-wheat.thin { opacity: .55; }
+.hb-stem { fill: none; stroke: var(--hb-wheat); stroke-width: 2.4; }
+.hb-type { font-size: 18px; letter-spacing: .2em; fill: var(--hb-ink); }
+.hb-type.sm { font-size: 9px; letter-spacing: .14em; fill: var(--soft); }
+.hb-type.dk { fill: #3A3428; }
+.hb-desert { fill: color-mix(in oklab, #C9A46A 70%, var(--pp)); }
+.hb-island { fill: color-mix(in oklab, #E8E2D2 70%, #8C877C); }
+.hb-birds path { fill: none; stroke: var(--hb-ink); stroke-width: 1.5; }
+.hb-lab path, .hb-lab rect { fill: none; stroke: var(--hb-ink); stroke-width: 4; stroke-linejoin: round; }
+.hb-flask path { fill: none; stroke: var(--hb-ink); stroke-width: 3; }
+.hb-flask .hb-liquid { fill: color-mix(in oklab, var(--hi) 45%, transparent); stroke: none; }
+.hb-drop { fill: var(--hi); animation: hb-drip 2.2s cubic-bezier(.5, 0, .9, .6) infinite; }
+@keyframes hb-drip { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 80% { transform: translateY(100px); opacity: 1; } 81%, 100% { opacity: 0; transform: translateY(100px); } }
+.hb-plant { fill: var(--hb-ink); }
+.hb-steam circle { fill: color-mix(in oklab, var(--hb-ink) 22%, transparent); }
+.hb-people g { fill: color-mix(in oklab, var(--hb-ink) 35%, var(--pp)); }
+.hb-people g.fed { fill: var(--hi); }
+.hb-figure { fill: #050504; }
+.hb-pince { stroke: #8C877C; stroke-width: 1.5; }
+.hb-trench { fill: #1C1A15; }
+.hb-wire { fill: none; stroke: #5A564C; stroke-width: 1.5; }
+.hb-gas ellipse { fill: var(--hb-gas); opacity: .35; filter: blur(10px); }
+.hb-gas { animation: hb-roll 9s linear infinite alternate; }
+.hb-gas.half ellipse { opacity: .4; }
+@keyframes hb-roll { to { transform: translateX(26px); } }
+.hb-hook { stroke: #8C877C; stroke-width: 4; }
+.hb-coat { fill: #D8D3C6; stroke: #8C877C; stroke-width: 2; }
+.hb-diploma, .hb-paper { fill: #E8E0CA; }
+.hb-diploma-b { fill: none; stroke: #8C7A4E; stroke-width: 1.5; }
+.hb-medal { fill: #C9A142; }
+.hb-medal-r { fill: none; stroke: #8E6E22; stroke-width: 2; }
+.hb-medal ~ g .hb-wheat { fill: #8E6E22; }
+.hb-medal ~ g .hb-stem { stroke: #8E6E22; }
+.hb-lines { stroke: rgba(40, 36, 28, .3); stroke-width: 2; }
+.hb-sig { fill: none; stroke: #23324F; stroke-width: 1.8; }
+.hb-window { fill: color-mix(in oklab, #C7CED4 70%, var(--pp)); }
+.hb-frame { fill: none; stroke: var(--hb-ink); stroke-width: 6; }
+.hb-roofs { fill: color-mix(in oklab, var(--hb-ink) 55%, #C7CED4); }
+.hb-sill { fill: var(--hb-ink); }
+@media (prefers-reduced-motion: reduce) { .hb-air.drifting, .hb-gas, .hb-drop { animation: none; } .hb-drop { transform: translateY(40px); } }

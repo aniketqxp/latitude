@@ -1,0 +1,157 @@
+/* ==========================================================================
+   The book: shared grammar for illustrated stories (js/book.js).
+   A story's own stylesheet supplies the palette (the world tokens on
+   body[data-world]) plus --night / --night-ink for dark-toned pages,
+   and draws everything inside .pg-art.
+   ========================================================================== */
+
+.book {
+  --pp: var(--bg); --pi: var(--fg); --ps: var(--soft);
+  --size: clamp(1.55rem, 6.3vw, 2.55rem);
+  position: relative;
+  height: calc(100svh - var(--bar-h) - env(safe-area-inset-top));
+  min-height: 460px;
+  display: grid; grid-template-rows: minmax(0, 1fr) auto;
+  overflow: hidden;
+  background: var(--bg);
+}
+.bk-pages { position: relative; overflow: hidden; touch-action: pan-y; -webkit-user-select: none; user-select: none; cursor: pointer; }
+
+/* ---------- A page ---------- */
+.pg {
+  position: absolute; inset: 0;
+  display: grid; grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+  background: var(--pp); color: var(--pi);
+  transform-origin: 0 50%; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  overflow: hidden;
+}
+.pg.tone-dark { --pp: var(--night, #12110F); --pi: var(--night-ink, #ECE5D6); --ps: color-mix(in oklab, var(--pi) 62%, var(--pp)); }
+.pg.tone-accent { --pp: var(--hi); --pi: var(--bg); --ps: color-mix(in oklab, var(--pi) 75%, var(--pp)); }
+.pg.tone-light { --pp: var(--day, #F4EFE4); --pi: var(--day-ink, #1A1712); --ps: color-mix(in oklab, var(--pi) 60%, var(--pp)); }
+/* Paper: a grain that reads on light and dark alike. */
+.pg::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 2;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay; opacity: .5;
+}
+.pg-shade { position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: 0; background: linear-gradient(90deg, rgba(0, 0, 0, .18), rgba(0, 0, 0, .55)); }
+
+.pg-art { position: relative; min-height: 0; min-width: 0; overflow: hidden; }
+.pg-art > svg { width: 100%; height: 100%; }
+.pg-words {
+  position: relative; z-index: 1; min-width: 0;
+  padding: clamp(1.1rem, 4.5vw, 2.5rem) var(--gutter) clamp(1.2rem, 5vw, 2.5rem);
+  align-self: center; width: 100%; max-width: 36rem;
+}
+.pg-eyebrow { color: var(--ps); margin-bottom: .9rem; }
+.pg-title {
+  margin: 0 0 .5rem; font: 360 clamp(2.4rem, 11.5vw, 5rem)/.96 var(--f-display);
+  letter-spacing: -.03em; font-variation-settings: 'SOFT' 100, 'WONK' 1, 'opsz' 144; text-wrap: balance;
+}
+.beat {
+  margin: 0 0 .55em; font: 370 var(--size)/1.13 var(--f-display);
+  letter-spacing: -.014em; font-variation-settings: 'SOFT' 100, 'WONK' 0, 'opsz' 96; text-wrap: pretty;
+  transition: opacity .55s var(--ease), transform .55s var(--ease), visibility 0s;
+}
+.beat:last-of-type { margin-bottom: 0; }
+.beat:not(.on) { opacity: 0; visibility: hidden; transform: translateY(.3em); transition: none; }
+.beat i { font-variation-settings: 'SOFT' 100, 'WONK' 1, 'opsz' 96; }
+.beat b { font-weight: 560; }
+.beat mark { background: none; color: var(--hi); }
+.tone-accent .beat mark { color: var(--pi); text-decoration: underline 2px; text-underline-offset: .18em; }
+.size-xl { --size: clamp(2.2rem, 11vw, 4.8rem); }
+.size-xl .beat { line-height: 1.02; letter-spacing: -.025em; font-variation-settings: 'SOFT' 100, 'WONK' 0, 'opsz' 144; }
+.size-m { --size: clamp(1.25rem, 5vw, 1.9rem); }
+.size-s { --size: clamp(1.05rem, 4.2vw, 1.4rem); }
+.size-s .beat { line-height: 1.32; }
+
+/* ---------- Layouts ---------- */
+/* under: picture on top, words beneath (side by side on wide screens) */
+.pg-under { grid-template-rows: minmax(0, 1fr) auto; }
+.pg-under .pg-words { align-self: start; padding-top: clamp(.9rem, 3vw, 1.6rem); }
+/* over / cover / full: words laid over the picture */
+.pg-over > *, .pg-cover > *, .pg-full > * { grid-area: 1 / 1; }
+.pg-over .pg-words, .pg-cover .pg-words { align-self: end; }
+.pg-over.at-top .pg-words { align-self: start; }
+.pg-over.at-middle .pg-words { align-self: center; }
+.pg-cover .pg-words { padding-bottom: clamp(1.6rem, 7vw, 3.5rem); }
+.pg-cover .beat { font-size: clamp(1.05rem, 4.2vw, 1.4rem); line-height: 1.35; color: var(--ps); }
+.pg-full .pg-words { align-self: end; }
+.pg-full .beat { font-size: clamp(1rem, 3.9vw, 1.25rem); line-height: 1.35; }
+/* text: words alone on the page */
+.pg-text .pg-words { padding-inline: max(var(--gutter), 1.5rem); }
+/* card: a framed intertitle */
+.pg-card .pg-words { justify-self: center; text-align: center; max-width: 30rem; padding: 2rem; }
+.pg-card .beat { text-wrap: balance; }
+
+@media (min-width: 900px) and (min-aspect-ratio: 5/4) {
+  .pg-under { grid-template: minmax(0, 1fr) / minmax(0, 1.15fr) minmax(0, 1fr); }
+  .pg-under .pg-words { align-self: center; padding-left: 0; }
+  .pg-text .pg-words, .pg-card .pg-words { justify-self: center; }
+}
+
+/* ---------- Glosses, notes, choices ---------- */
+.gl, .fn { border: 0; background: none; padding: 0; margin: 0; font: inherit; color: inherit; cursor: help; position: relative; }
+.gl { text-decoration: underline dotted; text-decoration-thickness: .07em; text-underline-offset: .16em; text-decoration-color: var(--hi); }
+.gl[aria-expanded="true"] { color: var(--hi); }
+.fn { font: 600 .42em/1 var(--f-mono); vertical-align: .95em; color: var(--hi); padding: 0 .12em; letter-spacing: 0; }
+.fn::after, .gl::after { content: ''; position: absolute; inset: -12px -8px; }
+.fn[aria-expanded="true"] { background: var(--hi); color: var(--pp); border-radius: 3px; }
+.pg-notes { margin-top: 1.1rem; padding-top: .9rem; border-top: 1px solid color-mix(in oklab, var(--pi) 22%, transparent); font: 400 clamp(.98rem, 3.9vw, 1.2rem)/1.42 var(--f-display); letter-spacing: 0; }
+.note { margin: 0 0 .5em; }
+.note-n { font: 600 .7em var(--f-mono); color: var(--hi); vertical-align: .3em; margin-right: .25em; }
+
+.pg-choices { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.2rem; opacity: 0; visibility: hidden; transition: opacity .5s var(--ease) .15s; }
+.pg.done .pg-choices { opacity: 1; visibility: visible; }
+.pg-choices button {
+  border: 1.5px solid currentColor; border-radius: 999px; background: transparent; color: inherit;
+  min-height: 44px; padding: .55rem 1.05rem; font: 500 .8rem/1.2 var(--f-mono); letter-spacing: .08em; text-transform: uppercase;
+  transition: background-color .2s, color .2s, transform .2s var(--spring);
+}
+.pg-choices button:active { transform: scale(.95); }
+.pg-choices button[aria-pressed="true"] { background: var(--pi); color: var(--pp); }
+
+/* ---------- The slip: glosses and notes surface here ---------- */
+.bk-slip {
+  position: absolute; z-index: 8; left: var(--gutter); right: var(--gutter); bottom: calc(3.6rem + env(safe-area-inset-bottom));
+  max-width: 32rem; margin-inline: auto;
+  padding: .95rem 1.15rem; border-radius: 14px;
+  background: var(--fg); color: var(--bg);
+  font: 400 1.02rem/1.45 var(--f-display); text-wrap: pretty;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, .28);
+  cursor: pointer;
+}
+.bk-slip .note-n { color: inherit; opacity: .6; }
+
+/* ---------- Lens: a switch between editions, readings, points of view ---------- */
+.bk-lens {
+  position: absolute; z-index: 7; top: .7rem; right: var(--gutter);
+  display: flex; align-items: center; gap: .15rem; padding: .2rem .2rem .2rem .7rem; border-radius: 999px;
+  background: color-mix(in oklab, var(--bg) 86%, transparent); color: var(--fg);
+  border: 1px solid var(--hair); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+.bk-lens .cap { margin-right: .35rem; font-size: .62rem; }
+.bk-lens button { border: 0; border-radius: 999px; background: transparent; min-height: 34px; padding: .3rem .7rem; font: 500 .74rem var(--f-mono); letter-spacing: .06em; }
+.bk-lens button[aria-checked="true"] { background: var(--fg); color: var(--bg); }
+
+/* ---------- Controls ---------- */
+.bk-ctl {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: .35rem var(--gutter) calc(.35rem + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--hair); background: var(--bg); color: var(--fg); position: relative; z-index: 6;
+}
+.bk-btn { width: 44px; height: 44px; border-radius: 999px; border: 1px solid var(--hair); background: transparent; display: grid; place-items: center; transition: transform .2s var(--spring), opacity .2s; }
+.bk-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.bk-btn:active { transform: scale(.9); }
+.bk-btn:disabled { opacity: .25; pointer-events: none; }
+.bk-btn.end { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.bk-btn.end svg { transform: rotate(90deg); }
+.bk-count { font: 500 .72rem var(--f-mono); letter-spacing: .14em; color: var(--soft); font-variant-numeric: tabular-nums; }
+.bk-live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; margin: 0; }
+
+/* A room that holds a book needs no padding of its own. */
+.room:has(> .book) { padding: 0; max-width: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .beat, .pg-choices { transition: opacity .2s linear; transform: none !important; }
+}
